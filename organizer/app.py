@@ -25,10 +25,11 @@ def main(
     config_map = ConfigMap(**read_config_map(folder))
     file_map_list = get_file_map_list(config_map)
 
-    if len(file_map_list) == 0:
-        logger.info("No files to move")
-    else:
+    (
         organize_files(config_map, file_map_list)
+        if len(file_map_list) != 0
+        else logger.info("No files to move")
+    )
 
     logger.info("Script Completed", elapsed_seconds=round(time.time() - start_time, 2))
 
