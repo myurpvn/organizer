@@ -26,9 +26,9 @@ def main(
     file_map_list = get_file_map_list(config_map)
 
     (
-        organize_files(config_map, file_map_list)
-        if len(file_map_list) != 0
-        else logger.info("No files to move")
+        logger.info("No files to move")
+        if len(file_map_list) == 0
+        else organize_files(config_map, file_map_list)
     )
 
     logger.info("Script Completed", elapsed_seconds=round(time.time() - start_time, 2))
