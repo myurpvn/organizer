@@ -6,7 +6,7 @@ from organizer.models.config_map import ConfigMap
 from organizer.common.logger import logger
 
 
-def get_file_map_list(config_map: ConfigMap) -> list[dict[str, str]]:
+def get_directory_listing(config_map: ConfigMap) -> list[dict[str, str]]:
 
     source_root_dir: str = config_map.source_path
     logger.info("Finding files", directory=source_root_dir)
