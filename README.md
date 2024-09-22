@@ -1,14 +1,10 @@
 # Organizer - *Directory organizing tool*
 
-## Introduction
-
-A python CLI tool to organize a folder based on their file type
-
 ## Table of contents
 
 - [Organizer - *Directory organizing tool*](#organizer---directory-organizing-tool)
-  - [Introduction](#introduction)
   - [Table of contents](#table-of-contents)
+  - [Introduction](#introduction)
   - [Getting Started](#getting-started)
     - [Using Poetry - recommended](#using-poetry---recommended)
     - [Using pip](#using-pip)
@@ -16,6 +12,10 @@ A python CLI tool to organize a folder based on their file type
     - [Running the App](#running-the-app)
   - [Organizer folder structure](#organizer-folder-structure)
   - [Notes](#notes)
+
+## Introduction
+
+A python CLI tool to organize a folder based on their file type
 
 ## Getting Started
 
