@@ -1,9 +1,9 @@
 class ConfigMap:
 
+    folder_key: str = "N/A"
     move_folders: bool = False
     source_path: str = ""
     destination_path: str = ""
-    folder: str = ""
 
     def __init__(self, **kwargs) -> None:
         for key, value in kwargs.items():

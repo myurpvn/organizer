@@ -20,4 +20,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-app = "organizer.app:app"
+app = "organizer.__main__:app"

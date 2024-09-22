@@ -1,77 +1,89 @@
 import mimetypes
 import shutil
 from pathlib import Path
+from collections import defaultdict
 
 from organizer.models.config_map import ConfigMap
 from organizer.common.logger import logger
 
 
-def get_directory_listing(config_map: ConfigMap) -> list[dict[str, str]]:
+def get_directory_listing_with_mappings(config_map: ConfigMap) -> dict[str, list[str]]:
+
+    types_to_ignore: list[str] = [
+        "UnknownType",
+        "folder",
+    ]
 
     source_root_dir: str = config_map.source_path
-    logger.info("Finding files", directory=source_root_dir)
+    logger.info("Finding files", directory_to_organize=source_root_dir)
 
-    file_map_list: list[dict[str, str]] = []
     path = Path(source_root_dir)
+    file_type_to_file_name_map: dict[str, list[str]] = defaultdict(list)
 
     for file in path.glob("*"):
 
-        file_map: dict[str, str] = {}
         file_type = (
-            "folders"
-            if (file.is_dir() and config_map.move_folders)
-            and not file.name.startswith("_")
+            "folder"
+            if file.is_dir() and not file.name.startswith("_")
             else mimetypes.guess_type(file.as_uri())[0] or "UnknownType"
         )
-        if file_type in ["UnknownType", "folders"]:
+        if file_type in types_to_ignore:
             continue
 
         file_type_split: list[str] = file_type.split("/")
-        file_map["file_type"] = (
-            file_type_split[0]
-            if file_type_split[0] != "application"
-            else file_type_split[1]
+        file_type: str = (
+            file_type_split[1]
+            if file_type_split[0] == "application"
+            else file_type_split[0]
         )
-        file_map["file_name"] = file.name
 
-        logger.info("file found", file_name=file.name, mime_file_type=file_type)
+        file_type_to_file_name_map[file_type].append(file.name)
 
-        file_map_list.append(file_map)
+    # logger.info(
+    #     "Files mapped",
+    #     file_type_to_file_name_map=file_type_to_file_name_map.items(),
+    # )
 
-    return file_map_list
+    return file_type_to_file_name_map
 
 
 def organize_files(
     config_map: ConfigMap,
-    file_map_list: list[dict[str, str]],
+    file_map_list: dict[str, list[str]],
 ) -> None:
 
-    logger.info("Organizing files", files_to_move=len(file_map_list))
+    logger.info("Organizing files", number_of_files=len(file_map_list))
 
     source_root_dir = config_map.source_path
     destination_root_dir = config_map.destination_path
 
-    for file_map in file_map_list:
-        file_name: str = file_map["file_name"]
-        file_type: str = file_map["file_type"]
+    logger.info(
+        "Moving files to destination",
+        destination_directory=destination_root_dir,
+    )
+
+    for file_type, file_name_list in file_map_list.items():
 
         destination_folder_path: str = (
             destination_root_dir + f"/_{file_type}"
             if config_map.move_folders
             else destination_root_dir + f"/{file_type}"
         )
-        destination_path: str = destination_folder_path + f"/{file_name}"
-        source_path: str = source_root_dir + f"/{file_name}"
 
-        if file_type != "folders":
-            Path(destination_folder_path).mkdir(
-                parents=True,
-                exist_ok=True,
+        for file_name in file_name_list:
+
+            destination_path: str = destination_folder_path + f"/{file_name}"
+            source_path: str = source_root_dir + f"/{file_name}"
+
+            if file_type != "folders":
+                Path(destination_folder_path).mkdir(
+                    parents=True,
+                    exist_ok=True,
+                )
+
+            shutil.move(
+                source_path,
+                destination_path,
             )
-
-        shutil.move(
-            source_path,
-            destination_path,
-        )
 
     logger.info("Folder Organized")

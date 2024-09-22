@@ -6,13 +6,13 @@
     "configurations": [
 
         {
-            "name": "App: Downloads",
+            "name": "organizer",
             "type": "debugpy",
             "request": "launch",
-            "cwd": "${workspaceFolder}/organizer",
-            "program": "app.py",
+            "cwd": "${workspaceFolder}",
+            "module": "organizer",
             "console": "integratedTerminal",
-            "args": ["-f", "Downloads"]
+            "args": ["-fkey", "Downloads"]
         }
     ]
 }

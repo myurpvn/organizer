@@ -10,18 +10,50 @@ A python CLI tool to organize a folder based on their file type
   - [Introduction](#introduction)
   - [Table of contents](#table-of-contents)
   - [Getting Started](#getting-started)
-    - [Organizer folder structure](#organizer-folder-structure)
-    - [Running the Organizer](#running-the-organizer)
+    - [Using Poetry - recommended](#using-poetry---recommended)
+    - [Using pip](#using-pip)
+    - [Create Configuration file](#create-configuration-file)
+    - [Running the App](#running-the-app)
+  - [Organizer folder structure](#organizer-folder-structure)
+  - [Notes](#notes)
 
 ## Getting Started
 
-- Prerequisite
-  - `poetry` - [install here!](https://python-poetry.org/docs/#installation)
+### Using Poetry - recommended
+
+- Install Poetry
+  - `poetry` - [follow steps here!](https://python-poetry.org/docs/#installation)
+
 - Install dependencies
 
     ```bash
     poetry install
     ```
+
+### Using pip
+
+- Create a virtual environment and activate - [follow steps here!](https://docs.python.org/3/tutorial/venv.html)
+  - Unix or MacOS
+
+    ```bash
+    python -m venv <venv_name>
+    source <venv_name>/bin/activate
+    ```
+
+  - Windows
+
+    ```powershell
+    python -m venv <venv_name>
+    <venv_name>\Scripts\activate
+    ```
+
+- Install dependencies
+
+    ```bash
+    pip install -r requirement.txt
+    ```
+
+### Create Configuration file
 
 - create a `yaml` file and name it as `config_map.yaml`
 
@@ -32,38 +64,58 @@ A python CLI tool to organize a folder based on their file type
 - Follow the below structure to populate the `config_map.yaml`
 
     ```yaml
-    folder-key: # this will be used in the CLI input arguement as --folder/-f (case-sensitive)
-        move_folders: # boolean value
-            # True: will move any folders inside the source_path to a "folder" named folder
-            # False: ignore any folders in source_path
-        source_path: # path to the folder to be organized
-        destination_path: # destination path to move/copy the organized files
+    folder-key: # (Required) [case-sensitive]
+        source_path: # (Required) path of the folder to be organized
+        destination_path: # (Optional) [Default: source_path]
 
 - You can have multiple folders configured here in `config_map.yaml`
 
     ```yaml
     # sample contents of config_map.yaml
     
-    # ignore any folders and organize file in the same directory
+    # writes in the same directory as "source_path"
     Downloads:
-        move_folders: False
         source_path: "/Users/johndoe/Downloads"
-        destination_path: "/Users/johndoe/Downloads"
 
-    # move folders and move the organized files to a new destination
+    # writes to a "destination_path"
     Documents:
-        move_folders: True
         source_path: "/Users/johndoe/Documents"
         destination_path: "/Users/johndoe/organized/Documents"
 
-    # folder key is case-sensitive so can help match case-sensitive folder names
+    # folder key is case-sensitive
     documents:
-        move_folders: False
         source_path: "/Users/johndoe/documents"
-        destination_path: "/Users/johndoe/documents"
+    Documents:
+        source_path: "/Users/johndoe/Documents"
     ```
 
-### Organizer folder structure
+### Running the App
+
+- Using poetry - *for poetry installation method*
+
+    ```bash
+    # using -fkey
+    poetry run app -fkey <folder_key>
+    ```
+
+    ```bash
+    # using -s and -d
+    poetry run app -s <source_path> -d <destination_path>
+    ```
+
+- Using python - *for pip installation method*
+
+    ```bash
+    # using -fkey
+    python -m organizer -fkey <folder_key>
+    ```
+
+    ```bash
+    # using -s and -d
+    python -m organizer -s <source_path> -d <destination_path>
+    ```
+
+## Organizer folder structure
 
 - Before running `Organizer`
 
@@ -87,7 +139,7 @@ A python CLI tool to organize a folder based on their file type
     └── structured-streaming.py
     ```
 
-- After running `Organizer` - *with move_folder set to* `False`
+- After running `Organizer`
 
     ```bash
     .
@@ -113,18 +165,6 @@ A python CLI tool to organize a folder based on their file type
         └── processing-4.3-macos-aarch64.zip
     ```
 
-### Running the Organizer
+## Notes
 
-- Running the organizer
-
-    ```bash
-    # folder-key is passed in folder arg
-    poetry run app --folder Downloads
-    ```
-
-- Running the organizer without any configurations in `config_map.yaml`
-
-    ```bash
-    # example args
-    poetry run app --input /Users/johndoe/pictures --output /Users/johndoe/pictures/organized
-    ```
+- `Organizer` ignores any folders inside the source folder
