@@ -21,8 +21,7 @@ A python CLI tool to organize a folder based on their file type
 
 ### Using Poetry - recommended
 
-- Install Poetry
-  - `poetry` - [follow steps here!](https://python-poetry.org/docs/#installation)
+- Install Poetry - [follow steps here!](https://python-poetry.org/docs/#installation)
 
 - Install dependencies
 
