@@ -55,10 +55,10 @@ def main(
 
     if config_map.source_path == "" or not os.path.exists(config_map.source_path):
         logger.error(
-            "Source Directory is not valid or doesn't exists!",
+            "Source Directory is empty or doesn't exists!",
             source_directory=source_path,
         )
-        raise Exception("Source Directory is not valid or doesn't exists!")
+        raise Exception("Source Directory is empty or doesn't exists!")
 
     logger.info(
         "Starting script",
